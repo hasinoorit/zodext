@@ -42,7 +42,7 @@ describe('deepPick', () => {
         });
 
         // Should return the Optional wrapper, not the underlying boolean
-        expect(deepPick(complex, 'users[0].details.isActive')).toBeInstanceOf(z.ZodOptional);
+        expect(deepPick(complex, 'users[113].details.isActive')).toBeInstanceOf(z.ZodOptional);
     });
 
     it('should preserve nullish wrappers', () => {
@@ -50,5 +50,12 @@ describe('deepPick', () => {
             field: z.string().nullish()
         });
         expect(deepPick(schema, 'field')).toBeInstanceOf(z.ZodOptional);
+    });
+
+    it('should resolved array schemas', () => {
+        const arraySchema = z.object({
+            items: z.array(z.object({ id: z.string() }))
+        });
+        expect(deepPick(arraySchema, 'items')).toBeInstanceOf(z.ZodArray);
     });
 });

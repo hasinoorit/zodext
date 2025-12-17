@@ -48,6 +48,37 @@ const defaults = initialValue(schema);
 // }
 ```
 
+## parseForm(schema, formData)
+
+Parses `FormData` into a structured object using a Zod schema for type coercion. Supports dot notation (`user.name`) and array notation (`items[0]`).
+
+```ts
+import { z } from 'zod';
+import { parseForm } from 'zodext';
+
+const schema = z.object({
+  name: z.string(),
+  age: z.number(), // Coerces "30" -> 30
+  isActive: z.boolean(), // Coerces "on"/"true" -> true
+  tags: z.array(z.string())
+});
+
+const formData = new FormData();
+formData.append('name', 'Alice');
+formData.append('age', '30');
+formData.append('isActive', 'on');
+formData.append('tags', 'designer');
+formData.append('tags', 'developer');
+
+const result = parseForm(schema, formData);
+// {
+//   name: "Alice",
+//   age: 30,
+//   isActive: true,
+//   tags: ["designer", "developer"]
+// }
+```
+
 ## License
 
 MIT
