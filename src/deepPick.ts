@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { z } from "zod";
 
 export type Paths<T> = T extends object
@@ -31,15 +32,22 @@ export const deepPick = <T extends z.ZodType>(schema: T, path: Paths<z.infer<T>>
         while (
             currentSchema instanceof z.ZodOptional ||
             currentSchema instanceof z.ZodNullable ||
-            // @ts-ignore - ZodPipe is not in the type definition but exists at runtime in Zod v4
-            (z.ZodPipe && currentSchema instanceof z.ZodPipe)
+            (typeof z.ZodPipe !== 'undefined' && currentSchema instanceof z.ZodPipe)
         ) {
-            // @ts-ignore
-            if (z.ZodPipe && currentSchema instanceof z.ZodPipe) {
-                // @ts-ignore
-                currentSchema = currentSchema._def.in;
+            if (typeof z.ZodPipe !== 'undefined' && currentSchema instanceof z.ZodPipe) {
+                // ZodPipe: unwrap to input schema
+                // @ts-expect-error types
+                currentSchema = currentSchema.def.in;
+            } else if (currentSchema instanceof z.ZodOptional || currentSchema instanceof z.ZodNullable) {
+                // Only call unwrap on ZodOptional/ZodNullable
+                if (typeof (currentSchema as any).unwrap === 'function') {
+                    currentSchema = (currentSchema as any).unwrap();
+                } else {
+                    // fallback: break if unwrap is not available
+                    break;
+                }
             } else {
-                currentSchema = currentSchema.unwrap();
+                break;
             }
         }
 
@@ -53,7 +61,19 @@ export const deepPick = <T extends z.ZodType>(schema: T, path: Paths<z.infer<T>>
             if (!/^\d+$/.test(key)) {
                 // console.warn(`⚠️ Expected numeric index for array, got "${key}".`);
             }
-            currentSchema = currentSchema.element;
+            // Zod v3: .element, Zod v4: .def.type
+            if (typeof (currentSchema as any).element !== 'undefined') {
+                currentSchema = (currentSchema as any).element;
+            } else if (
+                typeof (currentSchema as any).def !== 'undefined' &&
+                (currentSchema as any).def &&
+                typeof (currentSchema as any).def.type !== 'undefined'
+            ) {
+                currentSchema = (currentSchema as any).def.type;
+            } else {
+                console.error(`❌ Unable to get element type for ZodArray`);
+                return undefined;
+            }
         } else {
             console.error(`❌ Unhandled schema type for key "${key}": ${currentSchema.constructor.name}`);
             return undefined;
@@ -62,10 +82,9 @@ export const deepPick = <T extends z.ZodType>(schema: T, path: Paths<z.infer<T>>
 
     // Final unwrap: Only unwrap ZodPipe (transforms) to get the input schema.
     // We DO NOT unwrap Optional/Nullable here as per requirements.
-    // @ts-ignore
     while (z.ZodPipe && currentSchema instanceof z.ZodPipe) {
-        // @ts-ignore
-        currentSchema = currentSchema._def.in;
+        // @ts-expect-error types
+        currentSchema = currentSchema.def.in;
     }
 
     return currentSchema;

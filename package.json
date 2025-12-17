@@ -7,6 +7,7 @@
     "types": "dist/index.d.ts",
     "scripts": {
         "build": "vite build",
+        "prepare": "npm run build",
         "test": "vitest run",
         "dev": "vite build --watch",
         "lint": "tsc"
@@ -18,12 +19,24 @@
         "form",
         "defaults"
     ],
-    "author": "",
+    "author": "MD. HASHINUR RAHMAN",
     "license": "MIT",
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/hasinoorit/zodu"
     },
+    "bugs": {
+        "url": "https://github.com/hasinoorit/zodu/issues"
+    },
+    "homepage": "https://github.com/hasinoorit/zodu#readme",
     "peerDependencies": {
         "zod": "^4.0.0"
     },
