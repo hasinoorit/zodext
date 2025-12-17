@@ -1,0 +1,8 @@
+src
+test
+vite.config.ts
+tsconfig.json
+.gitignore
+.npmignore
+*.test.ts
+coverage
