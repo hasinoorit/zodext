@@ -1,11 +1,11 @@
-# zod-utils
+# zodext
 
 Utility functions for Zod schemas to help with form generation and state management.
 
 ## Installation
 
 ```bash
-pnpm add zod-utils
+pnpm add zodext
 ```
 
 ## deepPick(schema, path)
@@ -14,7 +14,7 @@ Extracts a nested validator from a Zod schema using dot-notation paths. Handles 
 
 ```ts
 import { z } from 'zod';
-import { deepPick } from 'zod-utils';
+import { deepPick } from 'zodext';
 
 const schema = z.object({
   user: z.object({
@@ -32,7 +32,7 @@ Generates a default initial value for a Zod schema. Useful for initializing form
 
 ```ts
 import { z } from 'zod';
-import { initialValue } from 'zod-utils';
+import { initialValue } from 'zodext';
 
 const schema = z.object({
   name: z.string(),

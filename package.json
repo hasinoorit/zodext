@@ -1,5 +1,5 @@
 {
-    "name": "zodu",
+    "name": "zodext",
     "version": "0.0.1",
     "description": "Utility functions for Zod: deepPick and initialValue",
     "main": "dist/index.js",
@@ -31,12 +31,12 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/hasinoorit/zodu"
+        "url": "https://github.com/hasinoorit/zodext"
     },
     "bugs": {
-        "url": "https://github.com/hasinoorit/zodu/issues"
+        "url": "https://github.com/hasinoorit/zodext/issues"
     },
-    "homepage": "https://github.com/hasinoorit/zodu#readme",
+    "homepage": "https://github.com/hasinoorit/zodext#readme",
     "peerDependencies": {
         "zod": "^4.0.0"
     },
