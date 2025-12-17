@@ -1,6 +1,6 @@
 {
     "name": "zodext",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Utility functions for Zod: deepPick and initialValue",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
