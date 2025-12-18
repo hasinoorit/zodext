@@ -248,4 +248,18 @@ describe('parseForm', () => {
         });
     });
 
+    it('handles URLSearchParams', () => {
+        const schema = z.object({
+            email: z.email().refine(val => val.endsWith('.com')),
+            age: z.string().transform(val => Number(val)),
+        });
+        const urlSearchParams = new URLSearchParams()
+        urlSearchParams.append('email', 'test@example.com');
+        urlSearchParams.append('age', '50');
+        const result = parseForm(schema, urlSearchParams);
+        expect(result).toEqual({
+            email: 'test@example.com',
+            age: '50'
+        });
+    })
 });

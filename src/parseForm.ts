@@ -9,7 +9,8 @@ const KEY_PATH_REGEX = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\
  * Parses FormData into a structured object based on a Zod schema.
  * Handles dot notation (user.name), array notation (items[0]), and type coercion.
  */
-export function parseForm<T extends z.ZodTypeAny>(schema: T, formData: FormData): z.infer<T> {
+
+export function parseForm<T extends z.ZodTypeAny>(schema: T, formData: FormData | URLSearchParams): z.infer<T> {
     const raw: any = {};
 
     for (const [key, value] of formData.entries()) {
@@ -18,6 +19,18 @@ export function parseForm<T extends z.ZodTypeAny>(schema: T, formData: FormData)
 
     return coerceValue(schema, raw);
 }
+
+export function parseQS<T extends z.ZodTypeAny>(schema: T, formData: URLSearchParams): z.infer<T> {
+    const raw: any = {};
+
+    for (const [key, value] of formData.entries()) {
+        setNestedValue(raw, key, value);
+    }
+
+    return coerceValue(schema, raw);
+}
+
+
 
 function setNestedValue(obj: any, path: string, value: any) {
     const keys: string[] = [];

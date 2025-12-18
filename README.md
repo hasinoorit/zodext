@@ -50,7 +50,7 @@ const defaults = initialValue(schema);
 
 ## parseForm(schema, formData)
 
-Parses `FormData` into a structured object using a Zod schema for type coercion. Supports dot notation (`user.name`) and array notation (`items[0]`).
+Parses `FormData` & `URLSearchParams` into a structured object using a Zod schema for type coercion. Supports dot notation (`user.name`) and array notation (`items[0]`).
 
 ```ts
 import { z } from 'zod';
